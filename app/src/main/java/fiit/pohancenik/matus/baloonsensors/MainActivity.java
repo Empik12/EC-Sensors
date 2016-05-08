@@ -79,7 +79,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        // FileManager initialization
         FM = new FileManager(getApplicationContext());
+        //DatabaseHandler initialization
         db = new DatabaseHandler(this);
 
 
@@ -117,7 +119,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy(){
+    protected void onDestroy(){//when app is destroyed, than unregister receiver
+                                // and change visibility in GUI
         super.onDestroy();
         FOUND_DEVICE = false;
         invalidateOptionsMenu();
@@ -144,8 +147,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
-            if(resultCode == RESULT_OK){
+        if (requestCode == 1) {//if ScanBLEDevicesActivity returns result
+            if(resultCode == RESULT_OK){// activity result is valid
                 DEVICE_NAME = data.getExtras().getString("Device_name");
                 DEVICE_ADDRESS = data.getExtras().getString("Device_address");
                 SESSION_NAME = data.getExtras().getString("Session_name");
@@ -169,18 +172,20 @@ public class MainActivity extends AppCompatActivity {
                 l1.setVisibility(View.GONE);
 
 
-
+                // broadcast receiver registration
                 registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
                 if (mBluetoothLeService != null) {
+                    //connect to device
                     final boolean result = mBluetoothLeService.connect(DEVICE_ADDRESS);
                     Log.d(TAG, "Connect request result=" + result);
                 }
-
+                    //gets folder for data storage
                     File packagefolder = FM.getPackageFolder();
+                    //gets current date
                     DateFormat df = new SimpleDateFormat("dd-MM-yyyy-HH-mm");
                     String date = df.format(Calendar.getInstance().getTime());
-                    Log.i("Sprava", packagefolder.getAbsolutePath());
 
+                    //file for data saving
                     file = FM.getFile(packagefolder.getAbsolutePath() , SESSION_NAME + "-" + date + ".csv");// getting file-name contains string set by user and current date
 
                     //file info are saved into database
@@ -233,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_connect_settings) {
             //Create Intent for Product Activity
             Intent intent = new Intent(this,ScanBLEDevicesActivity.class);
-            //Start Product Activity
+            //Start ScanBLEDevicesActivity
             startActivityForResult(intent, 1);
             return true;
         }
@@ -257,7 +262,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void showDialog() {
+    private void showDialog() {//dialog for asking user, if he is sure to disconnect from device
         new AlertDialog.Builder(this,  R.style.AlertDialogCustom)
                 .setTitle("Disconnect")
                 .setMessage("Are you sure you want to disconnect from device?")
@@ -361,22 +366,22 @@ public class MainActivity extends AppCompatActivity {
         return intentFilter;
     }
 
-    private void processData(String data) {
+    private void processData(String data) {// method to process received data
 
         if (data != null && (data.length() == 20)) {
-
+            // is received message is correct
             final String bracket1 = data.substring(0, 1);
             final String bracket2 = data.substring(2, 3);
 
 
-            if (bracket1.equals("[") && bracket2.equals("]") ) {
+            if (bracket1.equals("[") && bracket2.equals("]") ) {//check if message format is valid
                 final String Type = data.substring(1, 2);
-                if (!APP_MODE) {
+                if (!APP_MODE) {// if statement about current app mode
 
                     final String DataLenghtString = data.substring(3, 4);
                     int DataLenght = Integer.parseInt(DataLenghtString);
 
-                    switch (Type) {
+                    switch (Type) {// switch decides how to process data, Type means Type of sensor
                         case "1":
 
                             t1.setText(data.substring(20 - DataLenght));
@@ -414,10 +419,10 @@ public class MainActivity extends AppCompatActivity {
 
                 } else {// ...
 
-                    //  FM.writeToFile(myOutWriter,  "Zapisujem");
+
                     final String DataLenghtString = data.substring(3, 4);
                     int DataLenght = Integer.parseInt(DataLenghtString);
-                    switch (Type) {
+                    switch (Type) {// switch decides how to process data, Type means Type of senso
 
                         case "1":
 

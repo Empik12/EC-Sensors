@@ -84,7 +84,7 @@ public class ScanBLEDevicesActivity extends ListActivity {
         button1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                if (device != null) {
+                if (device != null) {//If device was selected, change the GUI view
 
                     findViewById(R.id.choosingDevice_scan_BLE_devices).setVisibility(View.GONE);
                     findViewById(R.id.buttonOK1_scan_BLE_devices).setVisibility(View.GONE);
@@ -112,8 +112,8 @@ public class ScanBLEDevicesActivity extends ListActivity {
                 TextView tv = (TextView) findViewById(R.id.SessionNameText_scan_BLE_devices);
 
 
-                if(! (tv.getText().toString().equals(""))){
-                    if(!(db.checkSessionName(tv.getText().toString()))) {
+                if(! (tv.getText().toString().equals(""))){//if session name was filled, than check name in database
+                    if(!(db.checkSessionName(tv.getText().toString()))) {//if the name isn't duplicate, than send data back to the MainActivity
                         CheckBox checkB = (CheckBox) findViewById(R.id.checkBox_scan_BLE_devices);
                         if (checkB.isChecked()){
                             data.putExtra("app_mode", true);
@@ -126,7 +126,7 @@ public class ScanBLEDevicesActivity extends ListActivity {
 
                         data.putExtra("Session_name", String.format(tv.getText().toString()));
 
-// Activity finished ok, return the data
+                        // Activity finished ok, return the data
                         setResult(RESULT_OK, data);
 
                         if (mScanning) {
@@ -138,7 +138,7 @@ public class ScanBLEDevicesActivity extends ListActivity {
                         Toast.makeText(ScanBLEDevicesActivity.this, "Session name already exist", Toast.LENGTH_SHORT).show();
                     }
                 }else {
-                    Toast.makeText(ScanBLEDevicesActivity.this, "Session name isn't defined", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ScanBLEDevicesActivity.this, "Session name isn't filled", Toast.LENGTH_SHORT).show();
                 }
 
 
@@ -174,25 +174,7 @@ public class ScanBLEDevicesActivity extends ListActivity {
     protected void onResume() {
         super.onResume();
         if (mBluetoothAdapter.isEnabled()) {
-          /*  mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
 
-                    if(getListView().getCount() == 0){
-                        Toast.makeText(ScanBLEDevicesActivity.this, "NO DEVICES", Toast.LENGTH_SHORT).show();
-                        finish();
-                    }else {
-                        findViewById(R.id.scanningDevices_scan_BLE_devices).setVisibility(View.GONE);
-                        findViewById(R.id.choosingDevice_scan_BLE_devices).setVisibility(View.VISIBLE);
-                        findViewById(R.id.buttonOK1_scan_BLE_devices).setVisibility(View.VISIBLE);
-                        TextView t = (TextView) findViewById(R.id.textView2);
-                        t.setText("Found devices");
-
-                    }
-
-
-                }
-            }, SCAN_PERIOD);*/
 
             // Initializes list view adapter.
             mLeDeviceListAdapter = new LeDeviceListAdapter();
@@ -268,7 +250,7 @@ public class ScanBLEDevicesActivity extends ListActivity {
             };
 
 
-    private class LeDeviceListAdapter extends BaseAdapter {
+    private class LeDeviceListAdapter extends BaseAdapter {// Adapter for list of found devices
         private ArrayList<BluetoothDevice> mLeDevices;
         private LayoutInflater mInflator;
 

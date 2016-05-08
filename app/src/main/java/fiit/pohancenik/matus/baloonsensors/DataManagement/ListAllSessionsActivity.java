@@ -34,9 +34,6 @@ public class ListAllSessionsActivity extends ListActivity {
 
         setContentView(R.layout.activity_list_all_sessions);
 
-
-
-
         FM = new FileManager(getApplicationContext());
         db = new DatabaseHandler(this);
 
@@ -52,7 +49,7 @@ public class ListAllSessionsActivity extends ListActivity {
 
     }
 
-    private void showDialog(final SessionInfo sessionInfo) {
+    private void showDialog(final SessionInfo sessionInfo) {//dialog, where aap is asking user if he wants to delete file
         new AlertDialog.Builder(this,  R.style.AlertDialogCustom)
                 .setTitle("Delete session file")
                 .setMessage("Are you sure you want to delete this file?")
@@ -84,7 +81,7 @@ public class ListAllSessionsActivity extends ListActivity {
         intent.putExtra("filepath",sessionInfo.getFilePath());
         intent.putExtra("name",sessionInfo.getName());
         intent.putExtra("date",sessionInfo.getDate());
-        //Start Product Activity
+        //Start ShowSessionDataActivity A
         startActivity(intent);
 
     }

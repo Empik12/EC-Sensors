@@ -28,12 +28,12 @@ public class ShowSessionDataActivity extends Activity implements MyDialogFragmen
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //   requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_show_session_data);
+        //file manager initialization
         FM = new FileManager(getApplicationContext());
         Bundle bundle = getIntent().getExtras();
+        //gets path to file for reading
         FILEPATH = bundle.getString("filepath");
-        //   db = new DatabaseHandler(this);
         checkedItems = new boolean[]{true,true,true,false,false,false};
 
         TextView t =(TextView) findViewById(R.id.Title_text_show_session_data);
@@ -56,20 +56,21 @@ public class ShowSessionDataActivity extends Activity implements MyDialogFragmen
 
     protected void onResume() {
         super.onResume();
-
+    //when activity is resumed, read data from file
         readData(FILEPATH);
     }
 
 
 
     public void readData(String filepath){
+        // starts asynchronous reading from file
         MyAsyncTask asyncTask =new MyAsyncTask(this);
         asyncTask.execute(filepath);
     }
 
 
     void showDialog() {
-
+        //shows dialog
         DialogFragment newFragment = CheckBoxAlertDialogFragment.newInstance(checkedItems);
         newFragment.show(getFragmentManager(), "dialog");
 
@@ -103,7 +104,7 @@ public class ShowSessionDataActivity extends Activity implements MyDialogFragmen
 
 
         @Override
-        protected Integer doInBackground(String... params) {
+        protected Integer doInBackground(String... params) {//reading data from file
 
             try {
                 data = FM.readCSVFile(params[0]);
@@ -117,7 +118,7 @@ public class ShowSessionDataActivity extends Activity implements MyDialogFragmen
 
 
         @Override
-        public void onPostExecute(Integer result) {
+        public void onPostExecute(Integer result) {// showing data in user interface
             TextView t = (TextView) findViewById(R.id.data_text_show_session_data);
             t.setText("");
 

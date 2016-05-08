@@ -37,7 +37,8 @@
             android:excludeFromRecents="true"/>
 
         <activity android:name=".DataManagement.ListAllSessionsActivity" />
-        <activity android:name=".DataManagement.ShowSessionDataActivity" />
+        <activity android:name=".DataManagement.ShowSessionDataActivity"
+            android:screenOrientation="portrait"  />
         <service android:name=".BluetoothLEConnection.BluetoothLEService" android:enabled="true"/>
     </application>
 
